@@ -1,6 +1,22 @@
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || (import.meta as any).env?.VITE_OPENROUTER_API_KEY;
+const getOpenRouterKey = () => {
+  try {
+    // Vite's define will replace this string during build
+    return process.env.OPENROUTER_API_KEY || (import.meta as any).env?.VITE_OPENROUTER_API_KEY || "";
+  } catch (e) {
+    return (import.meta as any).env?.VITE_OPENROUTER_API_KEY || "";
+  }
+};
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+const getGeminiKey = () => {
+  try {
+    return process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+  } catch (e) {
+    return (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+  }
+};
+
+const OPENROUTER_API_KEY = getOpenRouterKey();
+const GEMINI_API_KEY = getGeminiKey();
 
 const FREE_MODELS = [
   "google/gemini-2.0-flash-exp:free",

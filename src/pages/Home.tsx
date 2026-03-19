@@ -84,7 +84,8 @@ export const Home: React.FC = () => {
     
     // Check if API key is detected
     const key = process.env.OPENROUTER_API_KEY || (import.meta as any).env?.VITE_OPENROUTER_API_KEY;
-    setIsKeyDetected(!!key && key.length > 10);
+    const geminiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+    setIsKeyDetected((!!key && key.length > 10) || (!!geminiKey && geminiKey.length > 10));
   }, []);
 
   const handleGenerate = async () => {
