@@ -25,17 +25,9 @@ const OPENROUTER_API_KEY = getOpenRouterKey();
 const GEMINI_API_KEY = getGeminiKey();
 
 const FREE_MODELS = [
-  "google/gemini-2.0-flash-exp:free",
-  "google/gemini-2.0-flash-lite-preview-02-05:free",
-  "google/gemini-2.0-pro-exp-02-05:free",
-  "deepseek/deepseek-chat:free",
-  "qwen/qwen-2.5-72b-instruct:free",
-  "meta-llama/llama-3.1-8b-instruct:free",
+  "google/gemma-7b-it:free",
   "mistralai/mistral-7b-instruct:free",
-  "google/gemini-flash-1.5-8b:free",
-  "google/gemini-pro-1.5:free",
-  "meta-llama/llama-3.2-3b-instruct:free",
-  "meta-llama/llama-3.2-1b-instruct:free"
+  "meta-llama/llama-3.1-8b-instruct:free"
 ];
 
 const extractJSON = (text: string) => {
