@@ -333,7 +333,7 @@ export const Home: React.FC = () => {
                       whileTap={{ scale: 0.98 }}
                       key={i.id}
                       onClick={() => setIntensity(i.id)}
-                      className={`px-4 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${
+                      className={`px-2 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${
                         intensity === i.id 
                           ? 'bg-pink-600 border-pink-600 text-white shadow-xl shadow-pink-500/30 ring-4 ring-pink-500/10' 
                           : 'bg-white dark:bg-neutral-800/50 border-neutral-100 dark:border-neutral-700/50 text-neutral-600 dark:text-neutral-400 hover:border-pink-500/30 hover:bg-pink-50/30 dark:hover:bg-pink-900/10'
@@ -626,9 +626,9 @@ export const Home: React.FC = () => {
                   </div>
                 </summary>
                 <div className="px-8 pb-8">
-                  <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium border-t border-neutral-100 dark:border-neutral-800 pt-8">
+                  <div className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium border-t border-neutral-100 dark:border-neutral-800 pt-8">
                     <div dangerouslySetInnerHTML={{ __html: faq.a }} />
-                  </p>
+                  </div>
                 </div>
               </motion.details>
             ))}
