@@ -14,7 +14,8 @@ const FREE_MODELS = [
   "google/gemini-pro-1.5:free",
   "meta-llama/llama-3.2-3b-instruct:free",
   "meta-llama/llama-3.2-1b-instruct:free",
-  "gryphe/mythomax-l2-13b:free"
+  "microsoft/phi-3-mini-128k-instruct:free",
+  "openchat/openchat-7b:free"
 ];
 
 const extractJSON = (text: string) => {
