@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Copy, Share2, RefreshCcw, Zap, Laugh, Heart, Skull, Target, Send, Check, Instagram, Trash2, History, ChevronDown, Twitter, MessageCircle, ExternalLink, Star, TrendingUp } from 'lucide-react';
+import { Sparkles, Copy, Share2, RefreshCcw, Zap, Laugh, Heart, Skull, Target, Send, Check, Instagram, Trash2, History, ChevronDown, Twitter, MessageCircle, ExternalLink, Star, TrendingUp, AlertTriangle } from 'lucide-react';
 import { generateCaption } from '../services/aiService';
 import { SEO } from '../components/Layout';
 
@@ -74,11 +74,17 @@ export const Home: React.FC = () => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [recentOutputs, setRecentOutputs] = useState<{ caption: string; timestamp: number }[]>([]);
 
+  const [isKeyDetected, setIsKeyDetected] = useState<boolean | null>(null);
+
   useEffect(() => {
     const saved = localStorage.getItem('recent_captions');
     if (saved) {
       setRecentOutputs(JSON.parse(saved));
     }
+    
+    // Check if API key is detected
+    const key = process.env.OPENROUTER_API_KEY || (import.meta as any).env?.VITE_OPENROUTER_API_KEY;
+    setIsKeyDetected(!!key && key.length > 10);
   }, []);
 
   const handleGenerate = async () => {
@@ -156,6 +162,19 @@ export const Home: React.FC = () => {
 
         {/* Hero Section */}
         <div className="text-center mb-16 pt-12">
+          {!isKeyDetected && isKeyDetected !== null && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8 p-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-100 dark:border-amber-800/50 rounded-2xl text-amber-700 dark:text-amber-400 text-sm font-bold flex items-center justify-center gap-3 shadow-sm"
+            >
+              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              <span>
+                API Key not detected. Please add <code>OPENROUTER_API_KEY</code> in <strong>Settings (⚙️) &gt; Secrets</strong> and <strong>Redeploy</strong>.
+              </span>
+            </motion.div>
+          )}
+          
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
