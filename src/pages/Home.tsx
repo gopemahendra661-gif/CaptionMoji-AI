@@ -171,7 +171,7 @@ export const Home: React.FC = () => {
             >
               <AlertTriangle className="w-5 h-5 flex-shrink-0" />
               <span>
-                API Key not detected. Please add <code>OPENROUTER_API_KEY</code> in <strong>Settings (⚙️) &gt; Secrets</strong> and <strong>Redeploy</strong>.
+                API Key not detected. Please add <code>GEMINI_API_KEY</code> or <code>OPENROUTER_API_KEY</code> in <strong>Settings (⚙️) &gt; Secrets</strong> and <strong>Redeploy</strong>.
               </span>
             </motion.div>
           )}

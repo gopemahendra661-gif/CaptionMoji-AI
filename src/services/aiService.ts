@@ -24,31 +24,26 @@ const getGeminiKey = () => {
 const OPENROUTER_API_KEY = getOpenRouterKey();
 const GEMINI_API_KEY = getGeminiKey();
 
-const FREE_MODELS = [
-  "google/gemma-7b-it:free",
-  "mistralai/mistral-7b-instruct:free",
-  "meta-llama/llama-3.1-8b-instruct:free"
+const MODELS = [
+  "mistralai/mistral-7b-instruct",
+  "google/gemma-7b-it",
+  "meta-llama/llama-3.1-8b-instruct"
 ];
 
 const extractJSON = (text: string) => {
   try {
-    // Try direct parse
     return JSON.parse(text);
   } catch (e) {
-    // Try to find JSON block in markdown
     const match = text.match(/\{[\s\S]*\}/);
     if (match) {
       try {
-        // Clean up potential markdown artifacts
-        let jsonStr = match[0];
-        return JSON.parse(jsonStr);
+        return JSON.parse(match[0]);
       } catch (e2) {
         console.error("Failed to parse extracted JSON:", text);
-        throw new Error("AI returned invalid JSON format. Please try again.");
+        throw new Error("AI returned invalid JSON format.");
       }
     }
-    console.error("No JSON found in response:", text);
-    throw new Error("AI did not return a valid JSON response. Please try again.");
+    throw new Error("AI did not return a valid JSON response.");
   }
 };
 
@@ -58,10 +53,8 @@ export const generateCaption = async (
   intensity: string,
   style: string
 ) => {
-  const keyToUse = OPENROUTER_API_KEY;
-
-  if ((!keyToUse || keyToUse.trim() === "") && !GEMINI_API_KEY) {
-    throw new Error("API Key is missing. Please add 'OPENROUTER_API_KEY' in Settings > Secrets (gear icon at top right).");
+  if (!GEMINI_API_KEY && (!OPENROUTER_API_KEY || OPENROUTER_API_KEY.trim() === "")) {
+    throw new Error("API Key is missing. Please add 'GEMINI_API_KEY' or 'OPENROUTER_API_KEY' in Settings > Secrets.");
   }
 
   const systemInstruction = `
@@ -84,62 +77,11 @@ export const generateCaption = async (
   `;
 
   let lastError = "";
-  let attemptCount = 0;
 
-  if (keyToUse && keyToUse.trim() !== "") {
-    console.log("OpenRouter Key detected, starting generation...");
-    for (const model of FREE_MODELS) {
-      attemptCount++;
-      try {
-        console.log(`Attempt ${attemptCount}: Trying OpenRouter model: ${model}`);
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${keyToUse}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": window.location.origin,
-            "X-Title": "CaptionMoji AI",
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: "system", content: systemInstruction },
-              { role: "user", content: `Text: ${text}\nIntensity: ${intensity}\nStyle: ${style}` }
-            ],
-          })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const content = data.choices[0].message.content;
-          if (!content) throw new Error("Model returned empty content");
-          return extractJSON(content);
-        } else {
-          const errorData = await response.json().catch(() => ({}));
-          lastError = errorData.error?.message || response.statusText || `HTTP ${response.status}`;
-          console.warn(`Model ${model} failed (${response.status}):`, lastError);
-          
-          if (response.status === 401) {
-            console.error("Invalid OpenRouter API Key detected.");
-            break; // Stop trying OpenRouter if key is invalid
-          }
-          
-          continue; 
-        }
-      } catch (err: any) {
-        lastError = err.message;
-        console.error(`Error with model ${model}:`, err);
-        continue; 
-      }
-    }
-  } else {
-    console.warn("OpenRouter Key NOT detected or empty in aiService.");
-  }
-
-  // Final fallback to Gemini SDK if provided and OpenRouter failed
+  // 1. Try Google Gemini API (Primary)
   if (GEMINI_API_KEY) {
     try {
-      console.log("Falling back to Gemini SDK...");
+      console.log("Trying Primary Model: Google Gemini...");
       const { GoogleGenAI, Type } = await import("@google/genai");
       const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
       const response = await ai.models.generateContent({
@@ -147,6 +89,8 @@ export const generateCaption = async (
         contents: [{ role: "user", parts: [{ text: `Text: ${text}\nIntensity: ${intensity}\nStyle: ${style}` }] }],
         config: {
           systemInstruction,
+          temperature: 0.7,
+          maxOutputTokens: 800,
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.OBJECT,
@@ -168,12 +112,65 @@ export const generateCaption = async (
           }
         }
       });
-      return JSON.parse(response.text || "{}");
+      
+      if (response.text) {
+        console.log("Gemini generation successful.");
+        return JSON.parse(response.text);
+      }
     } catch (error: any) {
-      console.error("Gemini SDK Fallback Error:", error);
-      lastError = error.message;
+      console.error("Gemini API failed:", error.message);
+      lastError = `Gemini Error: ${error.message}`;
     }
   }
 
-  throw new Error(`AI generation failed after trying ${FREE_MODELS.length} models. Last error: ${lastError}. (Key detected: ${!!keyToUse}). Please ensure you have added 'OPENROUTER_API_KEY' in Vercel Environment Variables and REDEPLOYED your project.`);
+  // 2. Fallback to OpenRouter Models
+  if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
+    console.log("Falling back to OpenRouter models...");
+    for (const model of MODELS) {
+      try {
+        console.log("Trying OpenRouter model:", model);
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "CaptionMoji AI",
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: "system", content: systemInstruction },
+              { role: "user", content: `Text: ${text}\nIntensity: ${intensity}\nStyle: ${style}` }
+            ],
+            temperature: 0.7,
+            max_tokens: 800,
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const content = data.choices[0]?.message?.content;
+          if (content) {
+            console.log(`OpenRouter model ${model} successful.`);
+            return extractJSON(content);
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          lastError = errorData.error?.message || response.statusText || `HTTP ${response.status}`;
+          console.warn(`Model ${model} failed:`, lastError);
+          
+          if (response.status === 401) {
+            console.error("Invalid OpenRouter API Key.");
+            break; 
+          }
+        }
+      } catch (err: any) {
+        lastError = err.message;
+        console.error(`Error with model ${model}:`, err.message);
+      }
+    }
+  }
+
+  throw new Error(`AI generation failed. All models exhausted. Last error: ${lastError}`);
 };
