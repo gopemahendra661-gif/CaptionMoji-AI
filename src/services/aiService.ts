@@ -1,7 +1,10 @@
 const getOpenRouterKey = () => {
   try {
-    // Vite's define will replace this string during build
-    return process.env.OPENROUTER_API_KEY || (import.meta as any).env?.VITE_OPENROUTER_API_KEY || "";
+    // Vite's define will replace these strings during build
+    return process.env.OPENROUTER_API_KEY || 
+           (import.meta as any).env?.VITE_OPENROUTER_API_KEY || 
+           (import.meta as any).env?.OPENROUTER_API_KEY || 
+           "";
   } catch (e) {
     return (import.meta as any).env?.VITE_OPENROUTER_API_KEY || "";
   }
@@ -9,7 +12,10 @@ const getOpenRouterKey = () => {
 
 const getGeminiKey = () => {
   try {
-    return process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+    return process.env.GEMINI_API_KEY || 
+           (import.meta as any).env?.VITE_GEMINI_API_KEY || 
+           (import.meta as any).env?.GEMINI_API_KEY || 
+           "";
   } catch (e) {
     return (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
   }
@@ -29,9 +35,7 @@ const FREE_MODELS = [
   "google/gemini-flash-1.5-8b:free",
   "google/gemini-pro-1.5:free",
   "meta-llama/llama-3.2-3b-instruct:free",
-  "meta-llama/llama-3.2-1b-instruct:free",
-  "microsoft/phi-3-mini-128k-instruct:free",
-  "openchat/openchat-7b:free"
+  "meta-llama/llama-3.2-1b-instruct:free"
 ];
 
 const extractJSON = (text: string) => {
@@ -91,6 +95,7 @@ export const generateCaption = async (
   let attemptCount = 0;
 
   if (keyToUse && keyToUse.trim() !== "") {
+    console.log("OpenRouter Key detected, starting generation...");
     for (const model of FREE_MODELS) {
       attemptCount++;
       try {
@@ -135,6 +140,8 @@ export const generateCaption = async (
         continue; 
       }
     }
+  } else {
+    console.warn("OpenRouter Key NOT detected or empty in aiService.");
   }
 
   // Final fallback to Gemini SDK if provided and OpenRouter failed
@@ -176,5 +183,5 @@ export const generateCaption = async (
     }
   }
 
-  throw new Error(`AI generation failed. Last error: ${lastError}. Please check your API keys in Settings > Secrets.`);
+  throw new Error(`AI generation failed after trying ${FREE_MODELS.length} models. Last error: ${lastError}. (Key detected: ${!!keyToUse}). Please ensure you have added 'OPENROUTER_API_KEY' in Vercel Environment Variables and REDEPLOYED your project.`);
 };
