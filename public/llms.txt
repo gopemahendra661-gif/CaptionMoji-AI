@@ -17,5 +17,5 @@ Turn your text into viral captions with smart emojis in seconds. Generate Instag
 - Minimal: Very limited emojis
 
 ## Links
-- [Homepage](https://captionmojiai.online/)
+- [Homepage](https://www.captionmojiai.online/)
 - [Full Documentation](/llms-full.txt)
