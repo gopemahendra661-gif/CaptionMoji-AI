@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
+import { Blog } from './pages/Blog';
 import { InstagramPage, WhatsAppPage, FunnyPage, HindiPage, ViralPage } from './pages/SEOPages';
 import { PrivacyPolicy, TermsOfService, ContactUs } from './pages/LegalPages';
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/funny-emoji-generator" element={<FunnyPage />} />
           <Route path="/hindi-caption-generator" element={<HindiPage />} />
           <Route path="/viral-caption-generator" element={<ViralPage />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/contact-us" element={<ContactUs />} />

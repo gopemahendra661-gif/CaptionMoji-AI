@@ -410,92 +410,116 @@ export const Home: React.FC = () => {
         {/* Output Section */}
         <AnimatePresence>
           {output && (
-            <motion.div
-              id="output-section"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              className="space-y-12 mb-24"
-            >
-              <div className="text-center">
-                <h2 className="text-4xl md:text-6xl font-black mb-4">🔥 Your Viral Captions</h2>
-                <p className="text-neutral-500 font-bold">Choose the style that fits your vibe best</p>
-              </div>
+            <>
+              <motion.div
+                id="output-section"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 40 }}
+                className="space-y-12 mb-12"
+              >
+                <div className="text-center">
+                  <h2 className="text-4xl md:text-6xl font-black mb-4">🔥 Your Viral Captions</h2>
+                  <p className="text-neutral-500 font-bold">Choose the style that fits your vibe best</p>
+                </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {output.variations.map((v, i) => (
-                  <motion.div
-                    key={v.type}
-                    initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="glass-card rounded-[2.5rem] p-8 border-2 border-indigo-500/20 relative group hover:border-indigo-500 transition-all shadow-2xl shadow-indigo-500/5"
-                  >
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl text-indigo-600 dark:text-indigo-400">
-                          {v.type === 'Viral' && <Zap className="w-6 h-6" />}
-                          {v.type === 'Funny' && <Laugh className="w-6 h-6" />}
-                          {v.type === 'Emotional' && <Heart className="w-6 h-6" />}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {output.variations.map((v, i) => (
+                    <motion.div
+                      key={v.type}
+                      initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="glass-card rounded-[2.5rem] p-8 border-2 border-indigo-500/20 relative group hover:border-indigo-500 transition-all shadow-2xl shadow-indigo-500/5"
+                    >
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl text-indigo-600 dark:text-indigo-400">
+                            {v.type === 'Viral' && <Zap className="w-6 h-6" />}
+                            {v.type === 'Funny' && <Laugh className="w-6 h-6" />}
+                            {v.type === 'Emotional' && <Heart className="w-6 h-6" />}
+                          </div>
+                          <span className="text-xl font-black uppercase tracking-tighter">{v.type} Style</span>
                         </div>
-                        <span className="text-xl font-black uppercase tracking-tighter">{v.type} Style</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleCopy(v.caption, i)}
+                            className="p-3 bg-neutral-100 dark:bg-neutral-800 rounded-xl hover:bg-indigo-500 hover:text-white transition-all relative"
+                          >
+                            {copiedIndex === i ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleCopy(v.caption, i)}
-                          className="p-3 bg-neutral-100 dark:bg-neutral-800 rounded-xl hover:bg-indigo-500 hover:text-white transition-all relative"
-                        >
-                          {copiedIndex === i ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                        </button>
-                      </div>
-                    </div>
 
-                    <div className="bg-neutral-50 dark:bg-neutral-900/50 rounded-2xl p-6 mb-6 min-h-[160px] flex items-center justify-center text-center">
-                      <p className="text-xl md:text-2xl font-bold leading-relaxed whitespace-pre-wrap">
-                        {v.caption}
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="p-4 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
-                        <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
-                          <Target className="w-4 h-4" />
-                          WHY THIS WORKS:
-                        </p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-medium">
-                          {v.explanation}
+                      <div className="bg-neutral-50 dark:bg-neutral-900/50 rounded-2xl p-6 mb-6 min-h-[160px] flex items-center justify-center text-center">
+                        <p className="text-xl md:text-2xl font-bold leading-relaxed whitespace-pre-wrap">
+                          {v.caption}
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-4">
+                        <div className="p-4 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
+                          <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                            <Target className="w-4 h-4" />
+                            WHY THIS WORKS:
+                          </p>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-medium">
+                            {v.explanation}
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            onClick={() => handleShare(v.caption, 'instagram')}
+                            className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
+                          >
+                            <Instagram className="w-4 h-4" />
+                            Post to Insta
+                          </button>
+                          <button
+                            onClick={() => handleShare(v.caption, 'whatsapp')}
+                            className="flex items-center justify-center gap-2 py-3 bg-[#25D366] text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            WhatsApp
+                          </button>
+                        </div>
+                        
                         <button
-                          onClick={() => handleShare(v.caption, 'instagram')}
-                          className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
+                          onClick={() => handleShare(v.caption, 'twitter')}
+                          className="w-full flex items-center justify-center gap-2 py-3 bg-black text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
                         >
-                          <Instagram className="w-4 h-4" />
-                          Post to Insta
-                        </button>
-                        <button
-                          onClick={() => handleShare(v.caption, 'whatsapp')}
-                          className="flex items-center justify-center gap-2 py-3 bg-[#25D366] text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          WhatsApp
+                          <Twitter className="w-4 h-4" />
+                          Share on X (Twitter)
                         </button>
                       </div>
-                      
-                      <button
-                        onClick={() => handleShare(v.caption, 'twitter')}
-                        className="w-full flex items-center justify-center gap-2 py-3 bg-black text-white rounded-xl font-bold text-sm hover:opacity-90 transition-all"
-                      >
-                        <Twitter className="w-4 h-4" />
-                        Share on X (Twitter)
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Inline Suggestion for My Tool Hub */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-24 p-8 bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-900/10 dark:to-violet-900/10 rounded-[2.5rem] border-2 border-indigo-100 dark:border-indigo-800/50 text-center shadow-xl shadow-indigo-500/5"
+              >
+                <h4 className="text-2xl md:text-3xl font-black mb-4 flex items-center justify-center gap-3">
+                  🛠️ Need more tools for Instagram growth?
+                </h4>
+                <p className="text-neutral-600 dark:text-neutral-400 mb-8 font-medium max-w-2xl mx-auto">
+                  Discover a complete suite of free AI tools to skyrocket your social media presence and productivity.
+                </p>
+                <a
+                  href="https://www.mytoolhub.info"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-10 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xl shadow-lg shadow-indigo-500/30 transition-all hover:-translate-y-1"
+                >
+                  Explore More Tools 🚀
+                </a>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
 
@@ -657,5 +681,5 @@ export const Home: React.FC = () => {
       </div>
     </div>
   </div>
-  );
+);
 };

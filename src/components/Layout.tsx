@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sparkles, Instagram, MessageCircle, Zap, Laugh, Heart, Moon, Sun, Menu, X } from 'lucide-react';
+import { Sparkles, Instagram, MessageCircle, Zap, Laugh, Heart, Moon, Sun, Menu, X, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -46,6 +46,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     { name: 'Funny', path: '/funny-emoji-generator' },
     { name: 'Hindi', path: '/hindi-caption-generator' },
     { name: 'Viral', path: '/viral-caption-generator' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'All AI Tools', path: 'https://www.mytoolhub.info', external: true },
   ];
 
   return (
@@ -64,16 +66,29 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400",
-                    location.pathname === item.path ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-600 dark:text-neutral-400"
-                  )}
-                >
-                  {item.name}
-                </Link>
+                item.external ? (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 text-neutral-600 dark:text-neutral-400 flex items-center gap-1"
+                  >
+                    {item.name}
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400",
+                      location.pathname === item.path ? "text-indigo-600 dark:text-indigo-400" : "text-neutral-600 dark:text-neutral-400"
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               <button
                 onClick={toggleDarkMode}
@@ -112,17 +127,31 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             >
               <div className="px-4 pt-2 pb-6 space-y-1">
                 {navItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={cn(
-                      "block px-3 py-2 rounded-md text-base font-medium",
-                      location.pathname === item.path ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                    )}
-                  >
-                    {item.name}
-                  </Link>
+                  item.external ? (
+                    <a
+                      key={item.path}
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block px-3 py-2 rounded-md text-base font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 flex items-center justify-between"
+                    >
+                      {item.name}
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={cn(
+                        "block px-3 py-2 rounded-md text-base font-medium",
+                        location.pathname === item.path ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  )
                 ))}
               </div>
             </motion.div>
@@ -154,9 +183,21 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <ul className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
                 {navItems.map((item) => (
                   <li key={item.path}>
-                    <Link to={item.path} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                      {item.name}
-                    </Link>
+                    {item.external ? (
+                      <a 
+                        href={item.path} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1"
+                      >
+                        {item.name}
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    ) : (
+                      <Link to={item.path} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        {item.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -170,8 +211,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800 text-center text-sm text-neutral-500">
-            &copy; {new Date().getFullYear()} CaptionMoji AI. All rights reserved.
+          <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800 text-center">
+            <p className="text-sm text-neutral-500 mb-2">
+              &copy; {new Date().getFullYear()} CaptionMoji AI. All rights reserved.
+            </p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Explore more free AI tools on <a href="https://www.mytoolhub.info" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">My Tool Hub</a>
+            </p>
           </div>
         </div>
       </footer>
