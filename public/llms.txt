@@ -1,0 +1,21 @@
+# CaptionMoji AI - Viral AI Caption & Emoji Generator
+
+Turn your text into viral captions with smart emojis in seconds. Generate Instagram, WhatsApp, and Shorts captions with AI (Hindi + Hinglish + English). Trusted by 10,000+ creators.
+
+## Key Features
+- Viral Mode: High-energy, excitement, scroll-stopping hooks.
+- Funny Mode: Humor, sarcasm, relatable jokes.
+- Romantic Mode: Emotional depth, softness, connection.
+- Sad Mode: Deep emotional tone, relatable and expressive.
+- Hook Mode: Irresistible attention-grabbing first line.
+- Normal Mode: Simple but enhanced and engaging.
+
+## Visual Styles
+- Aesthetic: ✨🌸🌿💫
+- Fire: 🔥💯⚡🚀
+- Dark: 🖤🥀🌑
+- Minimal: Very limited emojis
+
+## Links
+- [Homepage](https://captionmojiai.online/)
+- [Full Documentation](/llms-full.txt)
