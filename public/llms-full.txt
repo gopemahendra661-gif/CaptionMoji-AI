@@ -1,0 +1,29 @@
+# CaptionMoji AI - Full Documentation for LLMs
+
+CaptionMoji AI is a specialized AI tool designed to transform plain text into engaging social media captions with optimized emoji placement.
+
+## Technical Overview
+- Framework: React 18+
+- Styling: Tailwind CSS
+- AI Models: Google Gemini (Primary), OpenRouter (Fallback: Mistral, Gemma, Llama)
+- Languages: English, Hindi, Hinglish
+
+## API Interaction
+The app uses a `generateCaption` service that accepts:
+- text: The user's input text
+- mode: viral, funny, romantic, sad, hook, normal
+- intensity: low, medium, high
+- style: aesthetic, fire, dark, minimal
+
+## Prompt Engineering
+The system uses a detailed instruction set to ensure:
+- Strong hooks in the first line
+- Natural rhythm and flow
+- Smart emoji combinations (2-4 per sentence)
+- Cultural nuances for Indian social media contexts
+
+## URL Structure
+- /: Main application interface
+- /sitemap.xml: Search engine sitemap
+- /robots.txt: Crawler instructions
+- /llms.txt: AI context summary
